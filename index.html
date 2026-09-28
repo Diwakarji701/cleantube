@@ -1,0 +1,691 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CleanTube - YouTube Player</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f0f0f,
+                    #181818
+                );
+
+            color: white;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        header {
+            padding: 30px 20px;
+
+            text-align: center;
+
+            background: rgba(20, 20, 20, 0.95);
+
+            border-bottom:
+                1px solid #333;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+
+            font-size: 32px;
+
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            margin-bottom: 25px;
+
+            color: #aaa;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           SEARCH BOX
+        ========================== */
+
+        .search-container {
+
+            display: flex;
+
+            width: 90%;
+
+            max-width: 900px;
+
+            margin: auto;
+
+            gap: 10px;
+        }
+
+        #youtubeUrl {
+
+            flex: 1;
+
+            padding: 15px 18px;
+
+            font-size: 16px;
+
+            color: white;
+
+            background: #252525;
+
+            border: 1px solid #444;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        #youtubeUrl:focus {
+
+            border-color: #ff3333;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(255, 51, 51, 0.15);
+        }
+
+        #youtubeUrl::placeholder {
+            color: #888;
+        }
+
+        /* =========================
+           BUTTON
+        ========================== */
+
+        #openButton {
+
+            padding:
+                15px 25px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            color: white;
+
+            background: #ff3333;
+
+            border: none;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        #openButton:hover {
+            background: #e00000;
+        }
+
+        #openButton:active {
+            transform: scale(0.97);
+        }
+
+        /* =========================
+           ERROR
+        ========================== */
+
+        #error {
+
+            min-height: 20px;
+
+            margin-top: 15px;
+
+            color: #ff6666;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           VIDEO AREA
+        ========================== */
+
+        .video-wrapper {
+
+            width: 92%;
+
+            max-width: 1200px;
+
+            margin:
+                35px auto;
+
+            background: black;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0, 0, 0, 0.5);
+
+            aspect-ratio: 16 / 9;
+        }
+
+        iframe {
+
+            width: 100%;
+
+            height: 100%;
+
+            border: none;
+
+            display: block;
+        }
+
+        /* =========================
+           INFO
+        ========================== */
+
+        .info {
+
+            width: 92%;
+
+            max-width: 1200px;
+
+            margin: 0 auto 30px;
+
+            padding: 18px;
+
+            background: #1c1c1c;
+
+            border:
+                1px solid #333;
+
+            border-radius: 10px;
+
+            color: #aaa;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        .info strong {
+            color: white;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #666;
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 700px) {
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .search-container {
+
+                flex-direction: column;
+
+                width: 94%;
+            }
+
+            #openButton {
+
+                width: 100%;
+            }
+
+            .video-wrapper {
+
+                width: 96%;
+
+                border-radius: 8px;
+            }
+
+            .info {
+
+                width: 96%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================== -->
+
+<header>
+
+    <h1>🎬 CleanTube</h1>
+
+    <div class="subtitle">
+        Paste a YouTube video link to watch it here
+    </div>
+
+
+    <div class="search-container">
+
+        <input
+            id="youtubeUrl"
+            type="text"
+            autocomplete="off"
+            placeholder="Paste YouTube URL here..."
+        >
+
+
+        <button
+            id="openButton"
+            onclick="loadVideo()">
+
+            ▶ Open Video
+
+        </button>
+
+    </div>
+
+
+    <div id="error"></div>
+
+</header>
+
+
+<!-- =========================
+     VIDEO PLAYER
+========================== -->
+
+<div class="video-wrapper">
+
+    <iframe
+        id="player"
+        src=""
+        title="YouTube Video Player"
+
+        allow="
+            accelerometer;
+            autoplay;
+            clipboard-write;
+            encrypted-media;
+            gyroscope;
+            picture-in-picture;
+            web-share
+        "
+
+        allowfullscreen>
+
+    </iframe>
+
+</div>
+
+
+<!-- =========================
+     INFORMATION
+========================== -->
+
+<div class="info">
+
+    <strong>Supported links:</strong>
+
+    <br>
+
+    YouTube Watch:
+    youtube.com/watch?v=VIDEO_ID
+
+    <br>
+
+    YouTube Live:
+    youtube.com/live/VIDEO_ID
+
+    <br>
+
+    YouTube Shorts:
+    youtube.com/shorts/VIDEO_ID
+
+    <br>
+
+    YouTube Short URL:
+    youtu.be/VIDEO_ID
+
+</div>
+
+
+<!-- =========================
+     FOOTER
+========================== -->
+
+<footer>
+
+    CleanTube — Local YouTube Player
+
+</footer>
+
+
+
+<script>
+
+/*
+==================================================
+    EXTRACT YOUTUBE VIDEO ID
+==================================================
+*/
+
+function extractVideoId(url) {
+
+    try {
+
+        const parsed = new URL(url);
+
+        const hostname =
+            parsed.hostname.toLowerCase();
+
+
+        /*
+        ==========================================
+        youtube.com
+        ==========================================
+        */
+
+        if (
+            hostname === "youtube.com" ||
+            hostname === "www.youtube.com" ||
+            hostname === "m.youtube.com"
+        ) {
+
+
+            /*
+            ------------------------------
+            /watch?v=VIDEO_ID
+            ------------------------------
+            */
+
+            if (
+                parsed.pathname === "/watch"
+            ) {
+
+                return parsed
+                    .searchParams
+                    .get("v");
+
+            }
+
+
+            /*
+            ------------------------------
+            /live/VIDEO_ID
+            ------------------------------
+            */
+
+            if (
+                parsed.pathname.startsWith("/live/")
+            ) {
+
+                return parsed
+                    .pathname
+                    .split("/")[2];
+
+            }
+
+
+            /*
+            ------------------------------
+            /shorts/VIDEO_ID
+            ------------------------------
+            */
+
+            if (
+                parsed.pathname.startsWith("/shorts/")
+            ) {
+
+                return parsed
+                    .pathname
+                    .split("/")[2];
+
+            }
+
+
+            /*
+            ------------------------------
+            /embed/VIDEO_ID
+            ------------------------------
+            */
+
+            if (
+                parsed.pathname.startsWith("/embed/")
+            ) {
+
+                return parsed
+                    .pathname
+                    .split("/")[2];
+
+            }
+
+        }
+
+
+        /*
+        ==========================================
+        youtu.be/VIDEO_ID
+        ==========================================
+        */
+
+        if (
+            hostname === "youtu.be"
+        ) {
+
+            return parsed
+                .pathname
+                .split("/")[1];
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "URL parsing error:",
+            error
+        );
+
+    }
+
+
+    return null;
+
+}
+
+
+
+/*
+==================================================
+    LOAD VIDEO
+==================================================
+*/
+
+function loadVideo() {
+
+
+    const input =
+        document.getElementById(
+            "youtubeUrl"
+        );
+
+
+    const player =
+        document.getElementById(
+            "player"
+        );
+
+
+    const error =
+        document.getElementById(
+            "error"
+        );
+
+
+    /*
+    Clear previous error
+    */
+
+    error.textContent = "";
+
+
+    /*
+    Get URL
+    */
+
+    const url =
+        input.value.trim();
+
+
+    /*
+    Empty URL
+    */
+
+    if (!url) {
+
+        error.textContent =
+            "Please paste a YouTube URL.";
+
+        return;
+
+    }
+
+
+    /*
+    Extract Video ID
+    */
+
+    const videoId =
+        extractVideoId(url);
+
+
+    console.log(
+        "Detected Video ID:",
+        videoId
+    );
+
+
+    /*
+    Invalid URL
+    */
+
+    if (!videoId) {
+
+        error.textContent =
+            "Invalid or unsupported YouTube URL.";
+
+        return;
+
+    }
+
+
+    /*
+    ==========================================
+    Create YouTube Embed URL
+    ==========================================
+    */
+
+    const embedUrl =
+        "https://www.youtube.com/embed/" +
+
+        encodeURIComponent(videoId) +
+
+        "?rel=0";
+
+
+    /*
+    Load video
+    */
+
+    player.src = embedUrl;
+
+
+    /*
+    Scroll to video
+    */
+
+    document
+        .querySelector(".video-wrapper")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+
+/*
+==================================================
+    ENTER KEY SUPPORT
+==================================================
+*/
+
+document
+    .getElementById("youtubeUrl")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                loadVideo();
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
+```
